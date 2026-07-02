@@ -2,16 +2,31 @@
   "name": "ajetunmobi-prospect",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.11.1",
+    "dotenv": "^17.4.2",
+    "lucide-react": "^1.21.0",
     "next": "16.2.9",
+    "next-auth": "^4.24.14",
+    "nodemailer": "^7.0.13",
+    "prisma": "^7.8.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "recharts": "^3.9.0",
+    "resend": "^6.16.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
