@@ -4,10 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "eslint",
+  "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
@@ -38,4 +39,5 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   }
+  
 }
