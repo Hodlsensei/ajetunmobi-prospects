@@ -1,10 +1,6 @@
-import { PrismaClient } from "@prisma/client"
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
+import { prisma } from "../../lib/prisma.js"
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
-
-const adapter = new PrismaBetterSqlite3({ url: "file:./prisma/dev.db" })
-const prisma = new PrismaClient({ adapter })
 
 export async function GET() {
   try {
@@ -29,18 +25,7 @@ export async function GET() {
       const cold = s.prospects.filter(p => p.score === "Cold").length
       const conversionRate = total > 0 ? Math.round((converted / total) * 100) : 0
 
-      return {
-        id: s.id,
-        name: s.name,
-        email: s.email,
-        active: s.active,
-        total,
-        converted,
-        hot,
-        warm,
-        cold,
-        conversionRate
-      }
+      return { id: s.id, name: s.name, email: s.email, active: s.active, total, converted, hot, warm, cold, conversionRate }
     })
 
     leaderboard.sort((a, b) => b.total - a.total)

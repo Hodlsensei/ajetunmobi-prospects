@@ -1,13 +1,7 @@
-import { PrismaClient } from "@prisma/client"
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
+import { prisma } from "../../../lib/prisma.js"
 import { NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 import { cookies } from "next/headers"
-
-const adapter = new PrismaBetterSqlite3({
-  url: "file:./prisma/dev.db"
-})
-const prisma = new PrismaClient({ adapter })
 
 export async function POST(req) {
   try {
@@ -29,7 +23,7 @@ export async function POST(req) {
 
     if (!user.active) {
       return NextResponse.json({ error: "Your account has been deactivated. Contact admin." }, { status: 403 })
-   }
+    }
 
     const cookieStore = await cookies()
     cookieStore.set("user", JSON.stringify({

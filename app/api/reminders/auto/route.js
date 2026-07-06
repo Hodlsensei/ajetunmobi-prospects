@@ -1,11 +1,7 @@
-import { PrismaClient } from "@prisma/client"
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
+import { prisma } from "../../../lib/prisma.js"
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import { sendReminderEmail } from "../../../lib/mailer"
-
-const adapter = new PrismaBetterSqlite3({ url: "file:./prisma/dev.db" })
-const prisma = new PrismaClient({ adapter })
+import { sendReminderEmail } from "../../../lib/mailer.js"
 
 export async function GET() {
   try {
@@ -14,7 +10,6 @@ export async function GET() {
     if (!userCookie) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
     const user = JSON.parse(userCookie.value)
-
     const threeDaysAgo = new Date(Date.now() - 3 * 60 * 1000)
 
     const staleProspects = await prisma.prospect.findMany({
@@ -40,7 +35,6 @@ export async function GET() {
       })
 
       if (!existingReminder) {
-        // Notify staff in-app
         await prisma.notification.create({
           data: {
             userId: prospect.addedBy.id,
@@ -48,7 +42,6 @@ export async function GET() {
           }
         })
 
-        // Send email to staff
         try {
           await sendReminderEmail({
             to: prospect.addedBy.email,
@@ -61,7 +54,6 @@ export async function GET() {
           console.error("Email failed:", emailErr)
         }
 
-        // Notify all admins in-app
         const admins = await prisma.user.findMany({ where: { role: "admin" } })
         for (const admin of admins) {
           await prisma.notification.create({
@@ -72,7 +64,6 @@ export async function GET() {
           })
         }
 
-        // Log the reminder
         await prisma.reminder.create({
           data: {
             prospectId: prospect.id,

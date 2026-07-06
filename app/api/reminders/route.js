@@ -1,11 +1,7 @@
-import { PrismaClient } from "@prisma/client"
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
+import { prisma } from "../../lib/prisma.js"
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import { sendReminderEmail } from "../../lib/mailer"
-
-const adapter = new PrismaBetterSqlite3({ url: "file:./prisma/dev.db" })
-const prisma = new PrismaClient({ adapter })
+import { sendReminderEmail } from "../lib/mailer.js"
 
 export async function POST(req) {
   try {

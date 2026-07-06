@@ -1,21 +1,12 @@
-import { PrismaClient } from "@prisma/client"
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
+import { prisma } from "../../lib/prisma.js"
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
-
-const adapter = new PrismaBetterSqlite3({
-  url: "file:./prisma/dev.db"
-})
-const prisma = new PrismaClient({ adapter })
 
 export async function POST(req) {
   try {
     const cookieStore = await cookies()
     const userCookie = cookieStore.get("user")
-
-    if (!userCookie) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    if (!userCookie) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
     const user = JSON.parse(userCookie.value)
     const body = await req.json()
@@ -34,11 +25,7 @@ export async function POST(req) {
       }
     })
 
-    // Create notification for admin
-    const admins = await prisma.user.findMany({
-      where: { role: "admin" }
-    })
-
+    const admins = await prisma.user.findMany({ where: { role: "admin" } })
     for (const admin of admins) {
       await prisma.notification.create({
         data: {
@@ -49,21 +36,17 @@ export async function POST(req) {
     }
 
     return NextResponse.json({ prospect })
-
   } catch (err) {
     console.error(err)
     return NextResponse.json({ error: "Server error" }, { status: 500 })
   }
 }
 
-export async function GET(req) {
+export async function GET() {
   try {
     const cookieStore = await cookies()
     const userCookie = cookieStore.get("user")
-
-    if (!userCookie) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    if (!userCookie) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
     const prospects = await prisma.prospect.findMany({
       include: { addedBy: { select: { name: true, email: true } } },
@@ -71,7 +54,6 @@ export async function GET(req) {
     })
 
     return NextResponse.json({ prospects })
-
   } catch (err) {
     console.error(err)
     return NextResponse.json({ error: "Server error" }, { status: 500 })
