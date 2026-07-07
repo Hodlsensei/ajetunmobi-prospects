@@ -237,16 +237,19 @@ export default function LoginPage() {
         justifyContent: "center",
         fontFamily: "sans-serif",
         opacity: showIntro ? 0 : 1,
-        transition: "opacity 0.6s ease"
+        transition: "opacity 0.6s ease",
+        padding: "24px",
+        boxSizing: "border-box"
       }}>
         <div style={{
           backgroundColor: "#ffffff",
           border: "1px solid #e0d8ce",
           borderRadius: "16px",
-          padding: "48px 40px",
+          padding: "clamp(28px, 6vw, 48px) clamp(20px, 6vw, 40px)",
           width: "100%",
           maxWidth: "420px",
-          boxShadow: "0 4px 24px rgba(0,0,0,0.06)"
+          boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+          boxSizing: "border-box"
         }}>
           <div style={{ textAlign: "center", marginBottom: "32px" }}>
             <div style={{

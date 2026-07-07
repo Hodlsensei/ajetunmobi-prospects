@@ -226,12 +226,28 @@ export default function StaffDashboard() {
     }, [])
 
     return (
-      <div style={{ backgroundColor: "#0d2b1d", borderRadius: "16px", padding: "32px 40px", marginBottom: "24px", border: "1px solid #1a4a2e" }}>
-        <div style={{ fontFamily: "monospace", fontSize: "22px", fontWeight: "700", color: "#2db973", letterSpacing: "2px", lineHeight: "1.8", whiteSpace: "pre-line", minHeight: "120px" }}>
+      <div style={{
+        backgroundColor: "#0d2b1d",
+        borderRadius: "16px",
+        padding: "clamp(18px, 4vw, 32px) clamp(18px, 5vw, 40px)",
+        marginBottom: "24px",
+        border: "1px solid #1a4a2e",
+        boxSizing: "border-box"
+      }}>
+        <div style={{
+          fontFamily: "monospace",
+          fontSize: "clamp(15px, 3.4vw, 22px)",
+          fontWeight: "700",
+          color: "#2db973",
+          letterSpacing: "1.5px",
+          lineHeight: "1.7",
+          whiteSpace: "pre-line",
+          minHeight: "clamp(80px, 20vw, 120px)"
+        }}>
           {displayText}
           <span style={{ opacity: showCursor ? 1 : 0, color: "#2db973" }}>|</span>
         </div>
-        <div style={{ marginTop: "16px", fontSize: "12px", color: "#4a7c5e", textTransform: "uppercase", letterSpacing: "1px" }}>
+        <div style={{ marginTop: "16px", fontSize: "11px", color: "#4a7c5e", textTransform: "uppercase", letterSpacing: "1px" }}>
           NeoLife Ajetunmobi Office — Team Motto
         </div>
       </div>
@@ -279,7 +295,7 @@ export default function StaffDashboard() {
             text-transform: uppercase; letter-spacing: 1px;
             font-weight: 700; margin-bottom: 8px;
           }
-          .lb-total { display: flex; align-items: baseline; gap: 10px; }
+          .lb-total { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
           .lb-total-num { font-size: 40px; font-weight: 800; color: #0d2b1d; line-height: 1; }
           .lb-total-rate { font-size: 13px; font-weight: 700; color: #2db973; }
           .lb-total-sub { font-size: 13px; color: #9ca3af; margin-top: 6px; }
@@ -336,7 +352,7 @@ export default function StaffDashboard() {
             border: 1px solid #cd7f32; box-shadow: 0 4px 10px rgba(205,127,50,0.3);
           }
           .lb-info { flex: 1; min-width: 0; }
-          .lb-name-row { display: flex; align-items: center; gap: 6px; }
+          .lb-name-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
           .lb-name { font-size: 14px; font-weight: 700; color: #0d2b1d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
           .lb-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
           .lb-count { text-align: right; flex-shrink: 0; }
@@ -346,6 +362,10 @@ export default function StaffDashboard() {
           @media (max-width: 640px) {
             .lb-total-num { font-size: 32px; }
             .lb-top-card { width: 100%; }
+          }
+          @media (max-width: 480px) {
+            .lb-row { padding: 12px 14px; gap: 10px; }
+            .lb-name { max-width: 130px; }
           }
         `}</style>
 
@@ -414,23 +434,108 @@ export default function StaffDashboard() {
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f0ebe3", fontFamily: "sans-serif", color: "#1a1a1a" }}>
+      <style jsx>{`
+        .pd-navbar {
+          background-color: #0d2b1d;
+          border-bottom: 1px solid #1a4a2e;
+          padding: 16px 32px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+        .pd-navbar-brand {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          min-width: 0;
+        }
+        .pd-navbar-brand-text { min-width: 0; overflow: hidden; }
+        .pd-navbar-brand-text > div:first-child {
+          font-weight: 700; font-size: 15px; color: #ffffff;
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .pd-navbar-brand-text > div:last-child { color: #2db973; font-size: 12px; }
+        .pd-navbar-actions {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          flex-shrink: 0;
+        }
+        .pd-notif-dropdown {
+          position: absolute;
+          right: 0;
+          top: 48px;
+          background-color: #ffffff;
+          border: 1px solid #e0d8ce;
+          border-radius: 12px;
+          width: 320px;
+          max-width: calc(100vw - 32px);
+          z-index: 200;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .pd-tabs {
+          background-color: #ffffff;
+          border-bottom: 1px solid #e0d8ce;
+          padding: 0 32px;
+          display: flex;
+          gap: 4px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .pd-tabs::-webkit-scrollbar { display: none; }
+        .pd-tab-btn {
+          padding: 12px 20px;
+          border: none;
+          cursor: pointer;
+          font-size: 13px;
+          font-weight: 600;
+          background-color: transparent;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .pd-content { padding: 32px; box-sizing: border-box; }
+        .pd-content.narrow { max-width: 820px; margin: 0 auto; }
+        .pd-form-grid-2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          margin-bottom: 16px;
+        }
 
-      <div style={{ backgroundColor: "#0d2b1d", borderBottom: "1px solid #1a4a2e", padding: "16px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "#2db973", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "16px", color: "#0d2b1d" }}>A</div>
-          <div>
-            <div style={{ fontWeight: "700", fontSize: "15px", color: "#ffffff" }}>Ajetunmobi Office</div>
-            <div style={{ color: "#2db973", fontSize: "12px" }}>Staff Portal {currentUser && `— ${currentUser.name}`}</div>
+        @media (max-width: 768px) {
+          .pd-navbar { padding: 12px 16px; }
+          .pd-tabs { padding: 0 16px; }
+          .pd-content { padding: 20px 16px; }
+          .pd-content.narrow { max-width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+          .pd-form-grid-2 { grid-template-columns: 1fr; }
+          .pd-navbar-brand-text > div:first-child { font-size: 14px; }
+        }
+      `}</style>
+
+      <div className="pd-navbar">
+        <div className="pd-navbar-brand">
+          <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "#2db973", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "16px", color: "#0d2b1d", flexShrink: 0 }}>A</div>
+          <div className="pd-navbar-brand-text">
+            <div>Ajetunmobi Office</div>
+            <div>Staff Portal {currentUser && `— ${currentUser.name}`}</div>
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        <div className="pd-navbar-actions">
           <div style={{ position: "relative" }}>
             <button onClick={() => { setShowNotifications(!showNotifications); markAllRead() }} style={{ backgroundColor: "#1a4a2e", border: "1px solid #2db97344", color: "#e8f5ee", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", fontSize: "18px", position: "relative" }}>
               🔔
               {unreadCount > 0 && <span style={{ position: "absolute", top: "-6px", right: "-6px", backgroundColor: "#2db973", color: "#0d2b1d", borderRadius: "50%", width: "18px", height: "18px", fontSize: "11px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold" }}>{unreadCount}</span>}
             </button>
             {showNotifications && (
-              <div style={{ position: "absolute", right: 0, top: "48px", backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", width: "320px", zIndex: 200, boxShadow: "0 8px 32px rgba(0,0,0,0.1)" }}>
+              <div className="pd-notif-dropdown">
                 <div style={{ padding: "16px", borderBottom: "1px solid #e0d8ce", fontWeight: "600", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#1a1a1a" }}>
                   <span>Notifications</span>
                   <button onClick={clearNotifications} style={{ background: "none", border: "none", color: "#dc2626", fontSize: "12px", cursor: "pointer" }}>Clear All</button>
@@ -446,16 +551,16 @@ export default function StaffDashboard() {
               </div>
             )}
           </div>
-          <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); router.push("/login") }} style={{ backgroundColor: "#1a4a2e", border: "1px solid #2db97344", color: "#e8f5ee", padding: "8px 16px", borderRadius: "8px", cursor: "pointer", fontSize: "13px" }}>Logout</button>
+          <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); router.push("/login") }} style={{ backgroundColor: "#1a4a2e", border: "1px solid #2db97344", color: "#e8f5ee", padding: "8px 16px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", whiteSpace: "nowrap" }}>Logout</button>
         </div>
       </div>
 
-      <div style={{ backgroundColor: "#ffffff", borderBottom: "1px solid #e0d8ce", padding: "0 32px", display: "flex", gap: "4px" }}>
-        <button onClick={() => setActiveStaffTab("prospects")} style={{ padding: "12px 20px", border: "none", borderBottom: activeStaffTab === "prospects" ? "2px solid #2db973" : "2px solid transparent", cursor: "pointer", fontSize: "13px", fontWeight: "600", backgroundColor: "transparent", color: activeStaffTab === "prospects" ? "#0d2b1d" : "#6b7280" }}>My Prospects</button>
-        <button onClick={() => { setActiveStaffTab("leaderboard"); setTyperKey(prev => prev + 1) }} style={{ padding: "12px 20px", border: "none", borderBottom: activeStaffTab === "leaderboard" ? "2px solid #2db973" : "2px solid transparent", cursor: "pointer", fontSize: "13px", fontWeight: "600", backgroundColor: "transparent", color: activeStaffTab === "leaderboard" ? "#0d2b1d" : "#6b7280" }}>🏆 Leaderboard</button>
+      <div className="pd-tabs">
+        <button className="pd-tab-btn" onClick={() => setActiveStaffTab("prospects")} style={{ borderBottom: activeStaffTab === "prospects" ? "2px solid #2db973" : "2px solid transparent", color: activeStaffTab === "prospects" ? "#0d2b1d" : "#6b7280" }}>My Prospects</button>
+        <button className="pd-tab-btn" onClick={() => { setActiveStaffTab("leaderboard"); setTyperKey(prev => prev + 1) }} style={{ borderBottom: activeStaffTab === "leaderboard" ? "2px solid #2db973" : "2px solid transparent", color: activeStaffTab === "leaderboard" ? "#0d2b1d" : "#6b7280" }}>🏆 Leaderboard</button>
       </div>
 
-      <div style={activeStaffTab === "prospects" ? { padding: "32px", maxWidth: "820px", margin: "0 auto" } : { padding: "32px" }}>
+      <div className={`pd-content${activeStaffTab === "prospects" ? " narrow" : ""}`}>
 
         {activeStaffTab === "prospects" && (
           <>
@@ -466,16 +571,16 @@ export default function StaffDashboard() {
             {success && <div style={{ backgroundColor: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "8px", padding: "12px 16px", marginBottom: "20px", color: "#15803d", fontSize: "14px", fontWeight: "500" }}>✅ {success}</div>}
             {error && <div style={{ backgroundColor: "#fef2f2", border: "1px solid #fecaca", borderRadius: "8px", padding: "12px 16px", marginBottom: "20px", color: "#dc2626", fontSize: "14px" }}>{error}</div>}
 
-            <form onSubmit={handleSubmit} style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "16px", padding: "28px", marginBottom: "32px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+            <form onSubmit={handleSubmit} style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "16px", padding: "28px", marginBottom: "32px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", boxSizing: "border-box" }}>
+              <div className="pd-form-grid-2">
                 <div><label style={labelStyle}>First Name *</label><input required value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} placeholder="John" style={inputStyle} /></div>
                 <div><label style={labelStyle}>Last Name *</label><input required value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} placeholder="Doe" style={inputStyle} /></div>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+              <div className="pd-form-grid-2">
                 <div><label style={labelStyle}>Phone Number *</label><input required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="08012345678" style={inputStyle} /></div>
                 <div><label style={labelStyle}>Email Address</label><input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="john@example.com" style={inputStyle} /></div>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+              <div className="pd-form-grid-2">
                 <div><label style={labelStyle}>Company / Organization</label><input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} placeholder="ABC Ltd" style={inputStyle} /></div>
                 <div>
                   <label style={labelStyle}>Prospect Score</label>
@@ -495,7 +600,7 @@ export default function StaffDashboard() {
               </button>
             </form>
 
-            <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "16px", padding: "24px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+            <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "16px", padding: "24px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", boxSizing: "border-box" }}>
               <h3 style={{ margin: "0 0 20px", fontSize: "15px", fontWeight: "700", color: "#0d2b1d" }}>My Prospects ({prospects.length})</h3>
               {fetchingProspects ? (
                 <div style={{ color: "#9ca3af", textAlign: "center", padding: "30px 0" }}>Loading...</div>
@@ -505,7 +610,7 @@ export default function StaffDashboard() {
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                   {prospects.map(p => (
                     <div key={p.id} style={{ backgroundColor: "#f0ebe3", border: "1px solid #e0d8ce", borderRadius: "10px", padding: "16px" }}>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px", flexWrap: "wrap", gap: "8px" }}>
                         <div>
                           <div style={{ fontWeight: "700", color: "#0d2b1d", marginBottom: "2px" }}>{p.firstName} {p.lastName}</div>
                           <div style={{ color: "#4a5568", fontSize: "13px" }}>{p.phone} {p.company ? `• ${p.company}` : ""}</div>
@@ -516,7 +621,7 @@ export default function StaffDashboard() {
                         </div>
                       </div>
                       {p.notes && <div style={{ color: "#6b7280", fontSize: "12px", marginBottom: "12px", fontStyle: "italic" }}>"{p.notes}"</div>}
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "8px" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "8px", flexWrap: "wrap", gap: "10px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                           <span style={{ fontSize: "12px", color: "#6b7280", fontWeight: "600" }}>Status:</span>
                           <select value={p.status} onChange={(e) => handleStatusUpdate(p.id, e.target.value)} style={{ backgroundColor: statusColor(p.status) + "18", color: statusColor(p.status), padding: "4px 10px", borderRadius: "20px", fontSize: "12px", border: "none", cursor: "pointer", outline: "none", fontWeight: "600" }}>

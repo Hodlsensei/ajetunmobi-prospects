@@ -220,14 +220,6 @@ export default function AdminDashboard() {
     outline: "none", boxSizing: "border-box"
   }
 
-  const tabStyle = (tab) => ({
-    padding: "12px 20px", border: "none",
-    borderBottom: activeTab === tab ? "2px solid #2db973" : "2px solid transparent",
-    cursor: "pointer", fontSize: "13px", fontWeight: "600",
-    backgroundColor: "transparent",
-    color: activeTab === tab ? "#0d2b1d" : "#6b7280",
-  })
-
   const TypewriterBanner = () => {
     const [displayText, setDisplayText] = useState("")
     const [currentLine, setCurrentLine] = useState(0)
@@ -265,19 +257,27 @@ export default function AdminDashboard() {
 
     return (
       <div style={{
-        backgroundColor: "#0d2b1d", borderRadius: "16px",
-        padding: "32px 40px", marginBottom: "24px",
-        border: "1px solid #1a4a2e"
+        backgroundColor: "#0d2b1d",
+        borderRadius: "16px",
+        padding: "clamp(18px, 4vw, 32px) clamp(18px, 5vw, 40px)",
+        marginBottom: "24px",
+        border: "1px solid #1a4a2e",
+        boxSizing: "border-box"
       }}>
         <div style={{
-          fontFamily: "monospace", fontSize: "22px", fontWeight: "700",
-          color: "#2db973", letterSpacing: "2px", lineHeight: "1.8",
-          whiteSpace: "pre-line", minHeight: "120px"
+          fontFamily: "monospace",
+          fontSize: "clamp(15px, 3.4vw, 22px)",
+          fontWeight: "700",
+          color: "#2db973",
+          letterSpacing: "1.5px",
+          lineHeight: "1.7",
+          whiteSpace: "pre-line",
+          minHeight: "clamp(80px, 20vw, 120px)"
         }}>
           {displayText}
           <span style={{ opacity: showCursor ? 1 : 0, color: "#2db973" }}>|</span>
         </div>
-        <div style={{ marginTop: "16px", fontSize: "12px", color: "#4a7c5e", textTransform: "uppercase", letterSpacing: "1px" }}>
+        <div style={{ marginTop: "16px", fontSize: "11px", color: "#4a7c5e", textTransform: "uppercase", letterSpacing: "1px" }}>
           NeoLife Ajetunmobi Office — Team Motto
         </div>
       </div>
@@ -339,6 +339,7 @@ export default function AdminDashboard() {
             display: flex;
             align-items: baseline;
             gap: 10px;
+            flex-wrap: wrap;
           }
           .lb-total-num {
             font-size: 40px;
@@ -463,7 +464,7 @@ export default function AdminDashboard() {
             box-shadow: 0 4px 10px rgba(205,127,50,0.3);
           }
           .lb-info { flex: 1; min-width: 0; }
-          .lb-name-row { display: flex; align-items: center; gap: 6px; }
+          .lb-name-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
           .lb-name {
             font-size: 14px; font-weight: 700; color: #0d2b1d;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -479,6 +480,14 @@ export default function AdminDashboard() {
           .lb-empty {
             color: #9ca3af; text-align: center; padding: 60px 0;
             background: #ffffff; border-radius: 14px; border: 1px solid #e0d8ce;
+          }
+          @media (max-width: 640px) {
+            .lb-total-num { font-size: 32px; }
+            .lb-top-card { width: 100%; }
+          }
+          @media (max-width: 480px) {
+            .lb-row { padding: 12px 14px; gap: 10px; }
+            .lb-name { max-width: 130px; }
           }
         `}</style>
 
@@ -547,10 +556,100 @@ export default function AdminDashboard() {
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f0ebe3", fontFamily: "sans-serif", color: "#1a1a1a" }}>
+      <style jsx>{`
+        .pd-navbar {
+          background-color: #0d2b1d;
+          border-bottom: 1px solid #1a4a2e;
+          padding: 16px 32px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+        .pd-navbar-brand {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          min-width: 0;
+        }
+        .pd-navbar-brand-text { min-width: 0; overflow: hidden; }
+        .pd-navbar-brand-text > div:first-child {
+          font-weight: 700; font-size: 15px; color: #ffffff;
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .pd-navbar-brand-text > div:last-child { color: #2db973; font-size: 12px; }
+        .pd-navbar-actions {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          flex-shrink: 0;
+        }
+        .pd-notif-dropdown {
+          position: absolute;
+          right: 0;
+          top: 48px;
+          background-color: #ffffff;
+          border: 1px solid #e0d8ce;
+          border-radius: 12px;
+          width: 320px;
+          max-width: calc(100vw - 32px);
+          z-index: 200;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .pd-tabs {
+          background-color: #ffffff;
+          border-bottom: 1px solid #e0d8ce;
+          padding: 0 32px;
+          display: flex;
+          gap: 4px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .pd-tabs::-webkit-scrollbar { display: none; }
+        .pd-tab-btn {
+          padding: 12px 20px;
+          border: none;
+          cursor: pointer;
+          font-size: 13px;
+          font-weight: 600;
+          background-color: transparent;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .pd-content { padding: 32px; box-sizing: border-box; }
+        .pd-stats-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+          margin-bottom: 32px;
+        }
+        .pd-form-grid-3 {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 16px;
+          margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+          .pd-navbar { padding: 12px 16px; }
+          .pd-tabs { padding: 0 16px; }
+          .pd-content { padding: 20px 16px; }
+          .pd-stats-grid { grid-template-columns: repeat(2, 1fr); }
+          .pd-form-grid-3 { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+          .pd-navbar-brand-text > div:first-child { font-size: 14px; }
+        }
+      `}</style>
 
       {approveModal && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 300 }}>
-          <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "16px", padding: "32px", width: "100%", maxWidth: "400px", boxShadow: "0 8px 32px rgba(0,0,0,0.1)" }}>
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 300, padding: "16px", boxSizing: "border-box" }}>
+          <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "16px", padding: "32px", width: "100%", maxWidth: "400px", boxShadow: "0 8px 32px rgba(0,0,0,0.1)", boxSizing: "border-box" }}>
             <h3 style={{ margin: "0 0 8px", fontSize: "18px", color: "#1a1a1a" }}>Approve Request</h3>
             <p style={{ color: "#6b7280", fontSize: "14px", margin: "0 0 20px" }}>
               Set a password for <strong style={{ color: "#0d2b1d" }}>{approveModal.name}</strong>
@@ -566,22 +665,22 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      <div style={{ backgroundColor: "#0d2b1d", borderBottom: "1px solid #1a4a2e", padding: "16px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "#2db973", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "16px", color: "#0d2b1d" }}>A</div>
-          <div>
-            <div style={{ fontWeight: "700", fontSize: "15px", color: "#ffffff" }}>Ajetunmobi Office</div>
-            <div style={{ color: "#2db973", fontSize: "12px" }}>Admin Dashboard</div>
+      <div className="pd-navbar">
+        <div className="pd-navbar-brand">
+          <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "#2db973", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "16px", color: "#0d2b1d", flexShrink: 0 }}>A</div>
+          <div className="pd-navbar-brand-text">
+            <div>Ajetunmobi Office</div>
+            <div>Admin Dashboard</div>
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        <div className="pd-navbar-actions">
           <div style={{ position: "relative" }}>
             <button onClick={() => { setShowNotifications(!showNotifications); markAllRead() }} style={{ backgroundColor: "#1a4a2e", border: "1px solid #2db97344", color: "#e8f5ee", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", fontSize: "18px", position: "relative" }}>
               🔔
               {unreadCount > 0 && <span style={{ position: "absolute", top: "-6px", right: "-6px", backgroundColor: "#2db973", color: "#0d2b1d", borderRadius: "50%", width: "18px", height: "18px", fontSize: "11px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold" }}>{unreadCount}</span>}
             </button>
             {showNotifications && (
-              <div style={{ position: "absolute", right: 0, top: "48px", backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", width: "320px", zIndex: 200, boxShadow: "0 8px 32px rgba(0,0,0,0.1)" }}>
+              <div className="pd-notif-dropdown">
                 <div style={{ padding: "16px", borderBottom: "1px solid #e0d8ce", fontWeight: "600", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#1a1a1a" }}>
                   <span>Notifications</span>
                   <button onClick={clearNotifications} style={{ background: "none", border: "none", color: "#dc2626", fontSize: "12px", cursor: "pointer" }}>Clear All</button>
@@ -597,39 +696,39 @@ export default function AdminDashboard() {
               </div>
             )}
           </div>
-          <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); router.push("/login") }} style={{ backgroundColor: "#1a4a2e", border: "1px solid #2db97344", color: "#e8f5ee", padding: "8px 16px", borderRadius: "8px", cursor: "pointer", fontSize: "13px" }}>Logout</button>
+          <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); router.push("/login") }} style={{ backgroundColor: "#1a4a2e", border: "1px solid #2db97344", color: "#e8f5ee", padding: "8px 16px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", whiteSpace: "nowrap" }}>Logout</button>
         </div>
       </div>
 
-      <div style={{ backgroundColor: "#ffffff", borderBottom: "1px solid #e0d8ce", padding: "0 32px", display: "flex", gap: "4px" }}>
-        <button style={tabStyle("dashboard")} onClick={() => setActiveTab("dashboard")}>Dashboard</button>
-        <button style={tabStyle("staff")} onClick={() => setActiveTab("staff")}>
+      <div className="pd-tabs">
+        <button className="pd-tab-btn" style={{ borderBottom: activeTab === "dashboard" ? "2px solid #2db973" : "2px solid transparent", color: activeTab === "dashboard" ? "#0d2b1d" : "#6b7280" }} onClick={() => setActiveTab("dashboard")}>Dashboard</button>
+        <button className="pd-tab-btn" style={{ borderBottom: activeTab === "staff" ? "2px solid #2db973" : "2px solid transparent", color: activeTab === "staff" ? "#0d2b1d" : "#6b7280" }} onClick={() => setActiveTab("staff")}>
           Manage Staff
           {pendingRequests > 0 && <span style={{ marginLeft: "8px", backgroundColor: "#dc2626", color: "white", borderRadius: "50%", width: "18px", height: "18px", fontSize: "11px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>{pendingRequests}</span>}
         </button>
-        <button style={tabStyle("leaderboard")} onClick={() => { setActiveTab("leaderboard"); setTyperKey(prev => prev + 1) }}>🏆 Leaderboard</button>
+        <button className="pd-tab-btn" style={{ borderBottom: activeTab === "leaderboard" ? "2px solid #2db973" : "2px solid transparent", color: activeTab === "leaderboard" ? "#0d2b1d" : "#6b7280" }} onClick={() => { setActiveTab("leaderboard"); setTyperKey(prev => prev + 1) }}>🏆 Leaderboard</button>
       </div>
 
-      <div style={{ padding: "32px" }}>
+      <div className="pd-content">
         {activeTab === "dashboard" && (
           <>
             <div style={{ fontSize: "11px", color: "#2db973", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px", fontWeight: "700" }}>Overview</div>
             <h2 style={{ margin: "0 0 24px", fontSize: "20px", fontWeight: "700", color: "#0d2b1d" }}>This week at a glance</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "32px" }}>
+            <div className="pd-stats-grid">
               {[
                 { label: "Total Prospects", value: stats.total, color: "#0d2b1d" },
                 { label: "New This Week", value: stats.newThisWeek, color: "#2db973" },
                 { label: "Converted", value: stats.converted, color: "#1d4ed8" },
                 { label: "Follow Ups Due", value: stats.followUpsDue, color: "#d97706" },
               ].map((stat, i) => (
-                <div key={i} style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", padding: "20px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+                <div key={i} style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", padding: "20px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", boxSizing: "border-box" }}>
                   <div style={{ color: "#6b7280", fontSize: "11px", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: "600" }}>{stat.label}</div>
                   <div style={{ fontSize: "28px", fontWeight: "700", color: stat.color }}>{stat.value}</div>
                 </div>
               ))}
             </div>
-            <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", padding: "24px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+            <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", padding: "24px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", boxSizing: "border-box" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px", flexWrap: "wrap", gap: "8px" }}>
                 <h3 style={{ margin: "0", fontSize: "15px", fontWeight: "700", color: "#0d2b1d" }}>All Prospects</h3>
                 <span style={{ fontSize: "11px", color: "#6b7280", backgroundColor: "#f0ebe3", padding: "3px 10px", borderRadius: "20px", fontWeight: "600" }}>{prospects.length} total</span>
               </div>
@@ -641,20 +740,20 @@ export default function AdminDashboard() {
                     <thead>
                       <tr style={{ borderBottom: "1px solid #e0d8ce" }}>
                         {["Name", "Phone", "Company", "Score", "Status", "Added By", "Date", "WhatsApp", "Action"].map(h => (
-                          <th key={h} style={{ padding: "10px 12px", textAlign: "left", color: "#6b7280", fontWeight: "600", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.4px" }}>{h}</th>
+                          <th key={h} style={{ padding: "10px 12px", textAlign: "left", color: "#6b7280", fontWeight: "600", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.4px", whiteSpace: "nowrap" }}>{h}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
                       {prospects.map(p => (
                         <tr key={p.id} style={{ borderBottom: "1px solid #f0ebe3" }}>
-                          <td style={{ padding: "12px", color: "#0d2b1d", fontWeight: "600" }}>{p.firstName} {p.lastName}</td>
-                          <td style={{ padding: "12px", color: "#4a5568" }}>{p.phone}</td>
-                          <td style={{ padding: "12px", color: "#4a5568" }}>{p.company || "—"}</td>
-                          <td style={{ padding: "12px" }}><span style={{ backgroundColor: scoreColor(p.score) + "18", color: scoreColor(p.score), padding: "4px 12px", borderRadius: "20px", fontSize: "11px", fontWeight: "600" }}>{p.score}</span></td>
-                          <td style={{ padding: "12px" }}><span style={{ backgroundColor: statusColor(p.status) + "18", color: statusColor(p.status), padding: "4px 12px", borderRadius: "20px", fontSize: "11px", fontWeight: "600" }}>{p.status}</span></td>
-                          <td style={{ padding: "12px", color: "#4a5568" }}>{p.addedBy?.name}</td>
-                          <td style={{ padding: "12px", color: "#9ca3af", fontSize: "12px" }}>{new Date(p.createdAt).toLocaleDateString()}</td>
+                          <td style={{ padding: "12px", color: "#0d2b1d", fontWeight: "600", whiteSpace: "nowrap" }}>{p.firstName} {p.lastName}</td>
+                          <td style={{ padding: "12px", color: "#4a5568", whiteSpace: "nowrap" }}>{p.phone}</td>
+                          <td style={{ padding: "12px", color: "#4a5568", whiteSpace: "nowrap" }}>{p.company || "—"}</td>
+                          <td style={{ padding: "12px" }}><span style={{ backgroundColor: scoreColor(p.score) + "18", color: scoreColor(p.score), padding: "4px 12px", borderRadius: "20px", fontSize: "11px", fontWeight: "600", whiteSpace: "nowrap" }}>{p.score}</span></td>
+                          <td style={{ padding: "12px" }}><span style={{ backgroundColor: statusColor(p.status) + "18", color: statusColor(p.status), padding: "4px 12px", borderRadius: "20px", fontSize: "11px", fontWeight: "600", whiteSpace: "nowrap" }}>{p.status}</span></td>
+                          <td style={{ padding: "12px", color: "#4a5568", whiteSpace: "nowrap" }}>{p.addedBy?.name}</td>
+                          <td style={{ padding: "12px", color: "#9ca3af", fontSize: "12px", whiteSpace: "nowrap" }}>{new Date(p.createdAt).toLocaleDateString()}</td>
                           <td style={{ padding: "12px" }}>
                             <button onClick={() => openWhatsApp(p)} style={{ backgroundColor: "#25d366", color: "#ffffff", border: "none", padding: "6px 12px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "700", display: "flex", alignItems: "center", gap: "5px", whiteSpace: "nowrap" }}>
                               <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -662,7 +761,7 @@ export default function AdminDashboard() {
                             </button>
                           </td>
                           <td style={{ padding: "12px" }}>
-                            <button onClick={() => deleteProspect(p.id)} style={{ backgroundColor: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca", padding: "4px 10px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontWeight: "600" }}>Delete</button>
+                            <button onClick={() => deleteProspect(p.id)} style={{ backgroundColor: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca", padding: "4px 10px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontWeight: "600", whiteSpace: "nowrap" }}>Delete</button>
                           </td>
                         </tr>
                       ))}
@@ -676,12 +775,12 @@ export default function AdminDashboard() {
 
         {activeTab === "staff" && (
           <>
-            <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", padding: "24px", marginBottom: "24px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+            <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", padding: "24px", marginBottom: "24px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", boxSizing: "border-box" }}>
               <h3 style={{ margin: "0 0 20px", fontSize: "15px", fontWeight: "700", color: "#0d2b1d" }}>Access Requests</h3>
               {requests.length === 0 ? (
                 <div style={{ color: "#9ca3af", textAlign: "center", padding: "20px 0", fontSize: "14px" }}>No access requests yet</div>
               ) : requests.map(r => (
-                <div key={r.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px", backgroundColor: "#f0ebe3", borderRadius: "10px", marginBottom: "10px", border: "1px solid #e0d8ce" }}>
+                <div key={r.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px", backgroundColor: "#f0ebe3", borderRadius: "10px", marginBottom: "10px", border: "1px solid #e0d8ce", flexWrap: "wrap", gap: "10px" }}>
                   <div>
                     <div style={{ fontWeight: "600", marginBottom: "2px", color: "#0d2b1d" }}>{r.name}</div>
                     <div style={{ color: "#4a5568", fontSize: "13px" }}>{r.email}</div>
@@ -701,12 +800,12 @@ export default function AdminDashboard() {
               ))}
             </div>
 
-            <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", padding: "24px", marginBottom: "24px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+            <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", padding: "24px", marginBottom: "24px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", boxSizing: "border-box" }}>
               <h3 style={{ margin: "0 0 20px", fontSize: "15px", fontWeight: "700", color: "#0d2b1d" }}>Add Staff Directly</h3>
               {addStaffSuccess && <div style={{ backgroundColor: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "8px", padding: "12px 16px", marginBottom: "16px", color: "#15803d", fontSize: "14px" }}>{addStaffSuccess}</div>}
               {addStaffError && <div style={{ backgroundColor: "#fef2f2", border: "1px solid #fecaca", borderRadius: "8px", padding: "12px 16px", marginBottom: "16px", color: "#dc2626", fontSize: "14px" }}>{addStaffError}</div>}
               <form onSubmit={handleAddStaff}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+                <div className="pd-form-grid-3">
                   <div>
                     <label style={{ color: "#6b7280", fontSize: "12px", display: "block", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.4px", fontWeight: "600" }}>Full Name</label>
                     <input required value={addStaffForm.name} onChange={(e) => setAddStaffForm({ ...addStaffForm, name: e.target.value })} placeholder="John Adeyemi" style={inputStyle} />
@@ -726,12 +825,12 @@ export default function AdminDashboard() {
               </form>
             </div>
 
-            <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", padding: "24px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+            <div style={{ backgroundColor: "#ffffff", border: "1px solid #e0d8ce", borderRadius: "12px", padding: "24px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", boxSizing: "border-box" }}>
               <h3 style={{ margin: "0 0 20px", fontSize: "15px", fontWeight: "700", color: "#0d2b1d" }}>All Staff ({staffList.length})</h3>
               {staffList.length === 0 ? (
                 <div style={{ color: "#9ca3af", textAlign: "center", padding: "20px 0", fontSize: "14px" }}>No staff members yet</div>
               ) : staffList.map(s => (
-                <div key={s.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px", backgroundColor: "#f0ebe3", borderRadius: "10px", marginBottom: "10px", border: "1px solid #e0d8ce" }}>
+                <div key={s.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px", backgroundColor: "#f0ebe3", borderRadius: "10px", marginBottom: "10px", border: "1px solid #e0d8ce", flexWrap: "wrap", gap: "10px" }}>
                   <div>
                     <div style={{ fontWeight: "600", marginBottom: "2px", color: "#0d2b1d" }}>{s.name}</div>
                     <div style={{ color: "#4a5568", fontSize: "13px" }}>{s.email}</div>
