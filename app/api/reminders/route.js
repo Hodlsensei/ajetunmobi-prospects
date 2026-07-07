@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma.js"
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import { sendReminderEmail } from "../lib/mailer.js"
+import { sendReminderEmail } from "../../lib/mailer.js"
 
 export async function POST(req) {
   try {
