@@ -1,9 +1,16 @@
-import { Resend } from "resend"
+﻿import { Resend } from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let resend
+
+function getResendClient() {
+  if (!resend) {
+    resend = new Resend(process.env.RESEND_API_KEY)
+  }
+  return resend
+}
 
 export async function sendReminderEmail({ to, staffName, prospectName, phone, notes }) {
-  await resend.emails.send({
+  await getResendClient().emails.send({
     from: "Ajetunmobi Office <onboarding@resend.dev>",
     to,
     subject: `Follow-up Reminder: ${prospectName}`,
@@ -31,7 +38,6 @@ export async function sendReminderEmail({ to, staffName, prospectName, phone, no
           </div>
           ` : ""}
         </div>
-
         <p style="color: #6b7280; font-size: 13px;">Don't let this prospect go cold. Reach out today and keep the conversation going!</p>
         
         <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e0d8ce; font-size: 11px; color: #9ca3af;">
